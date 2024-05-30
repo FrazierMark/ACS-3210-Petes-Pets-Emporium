@@ -14,7 +14,10 @@ block content
                     input.form-control(name="birthday" value=pet.birthday)   
                 .form-group
                     label Species
-                    input.form-control(name="species" value=pet.species)    
+                    input.form-control(name="species" value=pet.species)
+                .form-group
+                    label Avatar
+                    input.form-control(name="avatar" type="file" value=pet.picUrl)    
                 .form-group
                     label Rectangular Image URL
                     input.form-control(name="picUrl" value=pet.picUrl) 
@@ -30,4 +33,4 @@ block content
                 button(type="submit").btn.btn-primary Save
             .text-right
                 form(action=`/pets/${pet._id}?_method=DELETE`, method="POST")
-                    button(type="submit").btn.btn-danger Remove
+            button(type="submit").btn.btn-danger Remove
