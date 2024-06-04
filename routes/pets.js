@@ -29,6 +29,8 @@ const client = new Upload(process.env.S3_BUCKET, {
 	],
 });
 
+const mailer = require('../utils/mailer');
+
 // MODELS
 const Pet = require('../models/pet');
 
@@ -128,8 +130,8 @@ module.exports = (app) => {
 
 		Pet.findById(petId).exec((err, pet) => {
 			if (err) {
-				console.log('Error: ' + err);
-				res.redirect(`/pets/${req.params.id}`);
+				console.log('Error: ', err);
+				res.redirect(`pets/${req.params.id}`);
 			}
 			const charge = stripe.charges
 				.create({
@@ -139,10 +141,16 @@ module.exports = (app) => {
 					source: token,
 				})
 				.then((chg) => {
+					const user = {
+						email: req.body.stripeEmail,
+						amount: chg.amount / 100,
+						petName: pet.name,
+					};
+					mailer.sendMail(user, req, res);
 					res.redirect(`/pets/${req.params.id}`);
 				})
 				.catch((err) => {
-					console.log('Error:' + err);
+					console.log('Error: ', err);
 				});
 		});
 	});
