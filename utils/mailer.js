@@ -22,9 +22,15 @@ module.exports.sendMail = (user, req, res) => {
         }
     }).then(info => {
         console.log('Response: ', info);
-        res.redirect(`/pets/${req.params.id}`);
+        // Only redirect if headers haven't been sent
+        if (!res.headersSent) {
+            res.redirect(`/pets/${req.params.id}`);
+        }
     }).catch(err => {
         console.log('mailsend error: ', err);
-        res.redirect(`/pets/${req.params.id}`);
+        // Only redirect if headers haven't been sent
+        if (!res.headersSent) {
+            res.redirect(`/pets/${req.params.id}`);
+        }
     });
 }
